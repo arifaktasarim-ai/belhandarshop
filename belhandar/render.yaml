@@ -1,0 +1,59 @@
+# Render.com Blueprint Dosyası
+# Veritabanı burada TANIMLANMAZ çünkü Supabase kullanılıyor (Render dışı, harici servis).
+# Bu dosya sadece backend ve frontend Web Service'lerini oluşturur.
+# DATABASE_URL / DIRECT_URL / CLOUDINARY_* değerlerini Render Dashboard'dan elle girmen gerekir
+# (aşağıda "sync: false" olarak işaretli olanlar bunlardır) - bkz. RENDER_DEPLOY.md
+#
+# ÖNEMLİ: Render Dashboard'a girdiğin ortam değişkenleri KALICIDIR.
+# Her yeni deploy'da (git push sonrası) bu değerler otomatik olarak korunur ve yeniden kullanılır;
+# Supabase bilgilerini tekrar tekrar girmen gerekmez, sadece bir kez girilir.
+
+services:
+  # -------------------------
+  # Backend (Express API)
+  # -------------------------
+  - type: web
+    name: belhandar-backend
+    runtime: node
+    plan: free
+    rootDir: backend
+    buildCommand: npm install && npx prisma generate && npm run build
+    startCommand: npm run start:render
+    healthCheckPath: /api/health
+    envVars:
+      # --- Supabase bağlantı bilgileri (elle girilir, bkz. RENDER_DEPLOY.md) ---
+      - key: DATABASE_URL
+        sync: false
+      - key: DIRECT_URL
+        sync: false
+      # --- Kimlik doğrulama ---
+      - key: JWT_SECRET
+        generateValue: true
+      - key: JWT_EXPIRES_IN
+        value: 7d
+      # --- Cloudinary (elle girilir) ---
+      - key: CLOUDINARY_CLOUD_NAME
+        sync: false
+      - key: CLOUDINARY_API_KEY
+        sync: false
+      - key: CLOUDINARY_API_SECRET
+        sync: false
+      # --- Diğer ---
+      - key: CLIENT_URL
+        value: https://belhandar-frontend.onrender.com
+      - key: CRITICAL_STOCK_THRESHOLD
+        value: 10
+
+  # -------------------------
+  # Frontend (Next.js)
+  # -------------------------
+  - type: web
+    name: belhandar-frontend
+    runtime: node
+    plan: free
+    rootDir: frontend
+    buildCommand: npm install && npm run build
+    startCommand: npm run start:render
+    envVars:
+      - key: NEXT_PUBLIC_API_URL
+        value: https://belhandar-backend.onrender.com/api

@@ -1,0 +1,144 @@
+// Belhandar Parfüm - Veritabanı Şeması
+// Prisma ORM + PostgreSQL
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  // Uygulama çalışırken kullanılan bağlantı (Supabase'de "Connection Pooling" / port 6543)
+  url       = env("DATABASE_URL")
+  // Sadece "prisma migrate" komutları için kullanılan doğrudan bağlantı (port 5432)
+  // Supabase'in pgbouncer havuzu migration/DDL işlemlerini desteklemediği için gereklidir.
+  directUrl = env("DIRECT_URL")
+}
+
+enum Role {
+  ADMIN
+  STAFF
+}
+
+enum Gender {
+  ERKEK
+  KADIN
+  UNISEX
+}
+
+enum ProductStatus {
+  AKTIF
+  PASIF
+}
+
+enum StockMovementType {
+  GIRIS
+  CIKIS
+  DUZELTME
+}
+
+model User {
+  id        String   @id @default(cuid())
+  name      String
+  email     String   @unique
+  password  String
+  role      Role     @default(ADMIN)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  stockMovements StockMovement[]
+
+  @@map("users")
+}
+
+model Category {
+  id        String    @id @default(cuid())
+  name      String    @unique
+  slug      String    @unique
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+
+  products  Product[]
+
+  @@map("categories")
+}
+
+model Product {
+  id            String        @id @default(cuid())
+  name          String
+  code          String        @unique
+  barcode       String?       @unique
+  slug          String        @unique
+  description   String?       @db.Text
+
+  topNotes      String?
+  middleNotes   String?
+  baseNotes     String?
+
+  gender        Gender        @default(UNISEX)
+  volumeMl      Int
+
+  status        ProductStatus @default(AKTIF)
+  stockQuantity Int           @default(0)
+  criticalStock Int           @default(10)
+
+  categoryId    String?
+  category      Category?     @relation(fields: [categoryId], references: [id])
+
+  images        ProductImage[]
+  stockMovements StockMovement[]
+
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
+
+  @@map("products")
+}
+
+model ProductImage {
+  id        String   @id @default(cuid())
+  url       String
+  publicId  String
+  isPrimary Boolean  @default(false)
+  order     Int      @default(0)
+
+  productId String
+  product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+
+  @@map("product_images")
+}
+
+model StockMovement {
+  id          String            @id @default(cuid())
+  type        StockMovementType
+  quantity    Int
+  description String?
+  previousQty Int
+  newQty      Int
+
+  productId   String
+  product     Product           @relation(fields: [productId], references: [id], onDelete: Cascade)
+
+  userId      String
+  user        User              @relation(fields: [userId], references: [id])
+
+  createdAt   DateTime          @default(now())
+
+  @@map("stock_movements")
+}
+
+model Settings {
+  id             String   @id @default(cuid())
+  siteName       String   @default("Belhandar")
+  logoUrl        String?
+  heroImageUrl   String?
+  aboutTitle     String?
+  aboutText      String?  @db.Text
+  contactEmail   String?
+  contactPhone   String?
+  contactAddress String?
+  instagramUrl   String?
+  updatedAt      DateTime @updatedAt
+
+  @@map("settings")
+}
