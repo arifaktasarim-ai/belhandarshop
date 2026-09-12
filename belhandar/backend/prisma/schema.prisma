@@ -142,3 +142,22 @@ model Settings {
 
   @@map("settings")
 }
+
+// ----------------------------
+// Ana Sayfa Banner Görselleri (Admin panelinden yüklenir)
+// ----------------------------
+model Banner {
+  id        String   @id @default(cuid())
+  imageUrl  String                    // Cloudinary secure_url
+  publicId  String                    // Cloudinary public_id (silme işlemi için)
+  title     String?                   // Banner üzerindeki başlık (opsiyonel)
+  subtitle  String?                   // Banner üzerindeki alt yazı (opsiyonel)
+  linkUrl   String?                   // Tıklanınca gidilecek adres (opsiyonel)
+  order     Int      @default(0)      // Sıralama
+  isActive  Boolean  @default(true)   // Ana sayfada gösterilsin mi?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("banners")
+}

@@ -11,7 +11,7 @@ cloudinary.config({
 });
 
 // Ürün görselleri için storage - "belhandar/products" klasörüne yüklenir
-const storage = new CloudinaryStorage({
+const productStorage = new CloudinaryStorage({
   cloudinary,
   params: async () => ({
     folder: 'belhandar/products',
@@ -21,8 +21,24 @@ const storage = new CloudinaryStorage({
 });
 
 export const upload = multer({
-  storage,
+  storage: productStorage,
   limits: { fileSize: 5 * 1024 * 1024 }, // 5MB sınır
+});
+
+// Ana sayfa banner görselleri için storage - "belhandar/banners" klasörüne yüklenir
+// Bannerlar geniş/yatay olduğu için farklı bir kırpma oranı kullanılır
+const bannerStorage = new CloudinaryStorage({
+  cloudinary,
+  params: async () => ({
+    folder: 'belhandar/banners',
+    allowed_formats: ['jpg', 'jpeg', 'png', 'webp'],
+    transformation: [{ width: 1920, height: 900, crop: 'limit' }],
+  }),
+});
+
+export const uploadBanner = multer({
+  storage: bannerStorage,
+  limits: { fileSize: 8 * 1024 * 1024 }, // 8MB sınır
 });
 
 export { cloudinary };
