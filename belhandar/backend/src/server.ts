@@ -12,7 +12,6 @@ import stockRoutes from './routes/stock.routes';
 import dashboardRoutes from './routes/dashboard.routes';
 import reportRoutes from './routes/report.routes';
 import { publicSettingsRouter, adminSettingsRouter } from './routes/settings.routes';
-import { publicBannerRouter, adminBannerRouter } from './routes/banner.routes';
 import { errorHandler } from './middleware/error.middleware';
 
 dotenv.config();
@@ -52,7 +51,6 @@ app.use('/api/auth', authRoutes);
 app.use('/api/products', publicProductRouter);
 app.use('/api/categories', publicCategoryRouter);
 app.use('/api/settings', publicSettingsRouter);
-app.use('/api/banners', publicBannerRouter);
 
 // --- Admin route'ları ---
 app.use('/api/admin/products', adminProductRouter);
@@ -61,7 +59,6 @@ app.use('/api/admin/stock', stockRoutes);
 app.use('/api/admin/dashboard', dashboardRoutes);
 app.use('/api/admin/reports', reportRoutes);
 app.use('/api/admin/settings', adminSettingsRouter);
-app.use('/api/admin/banners', adminBannerRouter);
 
 // 404 yakalayıcı
 app.use((req, res) => res.status(404).json({ message: 'Endpoint bulunamadı.' }));
