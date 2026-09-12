@@ -1,39 +1,104 @@
-// Belhandar Ana Sayfa: Hero + Banner Carousel (admin yönetimli) + Hakkımızda + TÜM Ürünler + İletişim özeti
+'use client';
 
+// Belhandar Ana Sayfa
+// Artık eski Hero (büyük görsel + "BELHANDAR" başlığı) bölümü KALDIRILDI.
+// Ana sayfa, eskiden /urunler adresinde olan ürün vitrinini (arama + filtre + tüm ürünler) gösterir.
+// "Koleksiyon / Tüm Ürünler" başlığının bulunduğu yere, admin panelinden yönetilen banner yerleştirildi.
+
+import { useEffect, useState } from 'react';
+import Link from 'next/link';
 import Navbar from '@/components/site/Navbar';
 import Footer from '@/components/site/Footer';
-import Hero from '@/components/site/Hero';
 import BannerCarousel from '@/components/site/BannerCarousel';
 import ProductCard from '@/components/site/ProductCard';
-import { Product } from '@/lib/types';
-import Link from 'next/link';
+import { Input } from '@/components/ui/input';
+import { Select } from '@/components/ui/select';
+import { Product, Category } from '@/lib/types';
+import api from '@/lib/api';
+import { Search } from 'lucide-react';
 
-// Ana sayfada artık öne çıkan 4 ürün değil, TÜM aktif ürünler gösterilir.
-async function getAllProducts(): Promise<Product[]> {
-  try {
-    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api'}/products`, {
-      cache: 'no-store',
-    });
-    if (!res.ok) return [];
-    return res.json();
-  } catch {
-    return [];
-  }
-}
+export default function HomePage() {
+  const [products, setProducts] = useState<Product[]>([]);
+  const [categories, setCategories] = useState<Category[]>([]);
+  const [search, setSearch] = useState('');
+  const [gender, setGender] = useState('');
+  const [category, setCategory] = useState('');
+  const [loading, setLoading] = useState(true);
 
-export default async function HomePage() {
-  const products = await getAllProducts();
+  useEffect(() => {
+    api.get('/categories').then((res) => setCategories(res.data)).catch(() => {});
+  }, []);
+
+  useEffect(() => {
+    setLoading(true);
+    const params: Record<string, string> = {};
+    if (search) params.search = search;
+    if (gender) params.gender = gender;
+    if (category) params.category = category;
+
+    const timeout = setTimeout(() => {
+      api.get('/products', { params }).then((res) => setProducts(res.data)).finally(() => setLoading(false));
+    }, 300);
+
+    return () => clearTimeout(timeout);
+  }, [search, gender, category]);
 
   return (
     <main>
       <Navbar />
-      <Hero />
 
-      {/* Banner Carousel - Admin panelinden yüklenen görseller. Banner yoksa bölüm hiç görünmez. */}
-      <BannerCarousel />
+      <section className="pt-28 pb-20 px-6 lg:px-10 max-w-7xl mx-auto">
+        {/* Banner - Admin panelinden ("Banner Yönetimi") yüklenen görseller burada, sayfaya
+            sığacak (kutulu) şekilde gösterilir. Banner eklenmediyse yerine başlık metni gösterilir. */}
+        <BannerCarousel
+          variant="contained"
+          className="mb-12"
+          fallback={
+            <div className="text-center py-10">
+              <p className="tracking-[0.4em] text-bh-gold text-xs uppercase mb-4">Koleksiyon</p>
+              <h1 className="font-serif text-4xl md:text-5xl text-white">Tüm Ürünler</h1>
+            </div>
+          }
+        />
+
+        {/* Filtreler */}
+        <div className="glass rounded-2xl p-5 mb-10 grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div className="relative">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-white/40" size={18} />
+            <Input
+              placeholder="Ürün ara..."
+              className="pl-10"
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+            />
+          </div>
+          <Select value={gender} onChange={(e) => setGender(e.target.value)}>
+            <option value="">Tüm Cinsiyetler</option>
+            <option value="ERKEK">Erkek</option>
+            <option value="KADIN">Kadın</option>
+            <option value="UNISEX">Unisex</option>
+          </Select>
+          <Select value={category} onChange={(e) => setCategory(e.target.value)}>
+            <option value="">Tüm Kategoriler</option>
+            {categories.map((c) => (
+              <option key={c.id} value={c.id}>{c.name}</option>
+            ))}
+          </Select>
+        </div>
+
+        {loading ? (
+          <p className="text-center text-white/40 py-20">Yükleniyor...</p>
+        ) : products.length > 0 ? (
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+            {products.map((p) => <ProductCard key={p.id} product={p} />)}
+          </div>
+        ) : (
+          <p className="text-center text-white/40 py-20">Aradığınız kriterlere uygun ürün bulunamadı.</p>
+        )}
+      </section>
 
       {/* Hakkımızda */}
-      <section id="hakkimizda" className="py-28 px-6 lg:px-10 bg-bh-black">
+      <section id="hakkimizda" className="py-28 px-6 lg:px-10 bg-gradient-to-b from-bh-black to-[#151515]">
         <div className="max-w-4xl mx-auto text-center">
           <p className="tracking-[0.4em] text-bh-gold text-xs uppercase mb-4">Markamız</p>
           <h2 className="font-serif text-4xl md:text-5xl mb-8 text-white">Belhandar Hikayesi</h2>
@@ -42,32 +107,6 @@ export default async function HomePage() {
             anlattığı bir hikaye saklıdır. Geleneksel parfümeri sanatını modern, minimalist bir estetikle
             harmanlayarak; giyeni değil, hatırlananı yaratıyoruz. Zamansız zarafeti modern lüksle buluşturuyoruz.
           </p>
-        </div>
-      </section>
-
-      {/* Tüm Ürünler */}
-      <section className="py-20 px-6 lg:px-10 bg-gradient-to-b from-bh-black to-[#151515]">
-        <div className="max-w-7xl mx-auto">
-          <div className="text-center mb-14">
-            <p className="tracking-[0.4em] text-bh-gold text-xs uppercase mb-4">Koleksiyon</p>
-            <h2 className="font-serif text-4xl md:text-5xl text-white">Tüm Ürünlerimiz</h2>
-          </div>
-
-          {products.length > 0 ? (
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
-              {products.map((p) => <ProductCard key={p.id} product={p} />)}
-            </div>
-          ) : (
-            <p className="text-center text-white/40">Henüz ürün eklenmedi. Admin panelinden ürün ekleyebilirsiniz.</p>
-          )}
-
-          {products.length > 0 && (
-            <div className="text-center mt-14">
-              <Link href="/urunler" className="border border-bh-gold text-bh-gold px-8 py-3.5 rounded-full hover:bg-bh-gold hover:text-bh-black transition-all">
-                Filtrele ve Ara
-              </Link>
-            </div>
-          )}
         </div>
       </section>
 

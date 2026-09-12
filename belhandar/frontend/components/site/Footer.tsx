@@ -19,7 +19,7 @@ export default function Footer() {
           <h4 className="text-bh-gold text-sm tracking-widest uppercase mb-4">Hızlı Bağlantılar</h4>
           <div className="flex flex-col gap-2 text-sm text-white/60">
             <Link href="/" className="hover:text-bh-gold transition-colors">Ana Sayfa</Link>
-            <Link href="/urunler" className="hover:text-bh-gold transition-colors">Ürünler</Link>
+            <Link href="/#hakkimizda" className="hover:text-bh-gold transition-colors">Hakkımızda</Link>
             <Link href="/iletisim" className="hover:text-bh-gold transition-colors">İletişim</Link>
             <Link href="/admin/login" className="hover:text-bh-gold transition-colors">Yönetim Paneli</Link>
           </div>
