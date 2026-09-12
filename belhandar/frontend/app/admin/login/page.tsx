@@ -2,11 +2,11 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import Image from 'next/image';
 import { loginUser } from '@/lib/auth';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/card';
-import { Lock } from 'lucide-react';
 
 export default function AdminLoginPage() {
   const router = useRouter();
@@ -37,10 +37,9 @@ export default function AdminLoginPage() {
       />
       <div className="relative z-10 glass rounded-3xl p-10 w-full max-w-md">
         <div className="text-center mb-8">
-          <div className="w-16 h-16 rounded-full bg-gold-gradient flex items-center justify-center mx-auto mb-4">
-            <Lock className="text-bh-black" size={26} />
+          <div className="relative h-16 w-56 mx-auto mb-4">
+            <Image src="/logo-gold.png" alt="Belhandar Parfümleri" fill className="object-contain" priority />
           </div>
-          <h1 className="font-serif text-3xl text-gold-gradient tracking-widest">BELHANDAR</h1>
           <p className="text-white/50 text-sm mt-2">Yönetim Paneli Girişi</p>
         </div>
 

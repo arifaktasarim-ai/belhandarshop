@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import Image from 'next/image';
 import { ChevronDown } from 'lucide-react';
 
 export default function Hero() {
@@ -16,9 +17,9 @@ export default function Hero() {
 
       <div className="relative z-10 text-center px-6 animate-fade-in">
         <p className="tracking-[0.5em] text-bh-gold text-xs md:text-sm mb-6 uppercase">Eau de Parfum Koleksiyonu</p>
-        <h1 className="font-serif text-6xl md:text-8xl text-gold-gradient font-semibold tracking-wide mb-6">
-          BELHANDAR
-        </h1>
+        <div className="relative h-24 md:h-36 w-full max-w-[560px] mx-auto mb-6">
+          <Image src="/logo-gold.png" alt="Belhandar Parfümleri" fill className="object-contain" priority />
+        </div>
         <p className="text-white/70 max-w-xl mx-auto text-base md:text-lg leading-relaxed mb-10">
           Her şişede ustaca harmanlanmış notaların anlattığı bir hikaye. Zamansız zarafeti keşfedin.
         </p>

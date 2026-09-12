@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import Image from 'next/image';
 import { Instagram, Mail, Phone, MapPin } from 'lucide-react';
 
 export default function Footer() {
@@ -6,7 +7,9 @@ export default function Footer() {
     <footer className="bg-bh-black border-t border-bh-gold/15 pt-16 pb-8 px-6 lg:px-10">
       <div className="max-w-7xl mx-auto grid md:grid-cols-3 gap-10">
         <div>
-          <h3 className="font-serif text-2xl text-gold-gradient mb-3">BELHANDAR</h3>
+          <div className="relative h-12 w-44 mb-4">
+            <Image src="/logo-gold.png" alt="Belhandar Parfümleri" fill className="object-contain object-left" />
+          </div>
           <p className="text-white/50 text-sm leading-relaxed max-w-xs">
             Kokunun bir imza olduğuna inanıyoruz. Zamansız zarafeti modern lüksle buluşturuyoruz.
           </p>

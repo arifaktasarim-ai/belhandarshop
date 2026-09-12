@@ -1,5 +1,6 @@
 'use client';
 import Link from 'next/link';
+import Image from 'next/image';
 import { useState } from 'react';
 import { Menu, X } from 'lucide-react';
 
@@ -16,8 +17,8 @@ export default function Navbar() {
   return (
     <nav className="fixed top-0 left-0 right-0 z-50 glass-dark">
       <div className="max-w-7xl mx-auto px-6 lg:px-10 flex items-center justify-between h-20">
-        <Link href="/" className="font-serif text-3xl tracking-[0.2em] text-gold-gradient font-semibold">
-          BELHANDAR
+        <Link href="/" className="relative h-10 w-36 md:h-11 md:w-40 shrink-0">
+          <Image src="/logo-gold.png" alt="Belhandar Parfümleri" fill className="object-contain object-left" priority />
         </Link>
 
         <div className="hidden md:flex items-center gap-10">

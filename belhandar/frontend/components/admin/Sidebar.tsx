@@ -1,6 +1,7 @@
 'use client';
 
 import Link from 'next/link';
+import Image from 'next/image';
 import { usePathname } from 'next/navigation';
 import { LayoutDashboard, Package, Boxes, FileBarChart, Settings, LogOut } from 'lucide-react';
 import { logoutUser } from '@/lib/auth';
@@ -18,8 +19,10 @@ export default function Sidebar() {
 
   return (
     <aside className="w-64 min-h-screen bg-[#0A0A0A] border-r border-bh-gold/15 flex flex-col fixed left-0 top-0">
-      <div className="h-20 flex items-center justify-center border-b border-bh-gold/15">
-        <span className="font-serif text-2xl text-gold-gradient tracking-widest">BELHANDAR</span>
+      <div className="h-20 flex items-center justify-center border-b border-bh-gold/15 px-6">
+        <div className="relative h-11 w-full">
+          <Image src="/logo-gold.png" alt="Belhandar Parfümleri" fill className="object-contain" priority />
+        </div>
       </div>
 
       <nav className="flex-1 py-8 px-4 space-y-1">
