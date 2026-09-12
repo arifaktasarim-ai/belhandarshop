@@ -51,3 +51,15 @@ export interface StockMovement {
   product?: { name: string; code: string };
   user?: { name: string };
 }
+
+export interface Banner {
+  id: string;
+  imageUrl: string;
+  publicId: string;
+  title?: string | null;
+  subtitle?: string | null;
+  linkUrl?: string | null;
+  order: number;
+  isActive: boolean;
+  createdAt: string;
+}

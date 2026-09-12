@@ -3,12 +3,13 @@
 import Link from 'next/link';
 import Image from 'next/image';
 import { usePathname } from 'next/navigation';
-import { LayoutDashboard, Package, Boxes, FileBarChart, Settings, LogOut } from 'lucide-react';
+import { LayoutDashboard, Package, Boxes, FileBarChart, Settings, LogOut, GalleryHorizontal } from 'lucide-react';
 import { logoutUser } from '@/lib/auth';
 
 const menuItems = [
   { href: '/admin/dashboard', label: 'Dashboard', icon: LayoutDashboard },
   { href: '/admin/urunler', label: 'Ürünler', icon: Package },
+  { href: '/admin/banner', label: 'Banner Yönetimi', icon: GalleryHorizontal },
   { href: '/admin/stok', label: 'Stok Yönetimi', icon: Boxes },
   { href: '/admin/raporlar', label: 'Raporlar', icon: FileBarChart },
   { href: '/admin/ayarlar', label: 'Ayarlar', icon: Settings },

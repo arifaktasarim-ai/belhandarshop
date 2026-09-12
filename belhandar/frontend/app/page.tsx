@@ -1,32 +1,36 @@
-// Belhandar Ana Sayfa: Hero + Hakkımızda + Öne Çıkan Ürünler + İletişim özeti
+// Belhandar Ana Sayfa: Hero + Banner Carousel (admin yönetimli) + Hakkımızda + TÜM Ürünler + İletişim özeti
 
 import Navbar from '@/components/site/Navbar';
 import Footer from '@/components/site/Footer';
 import Hero from '@/components/site/Hero';
+import BannerCarousel from '@/components/site/BannerCarousel';
 import ProductCard from '@/components/site/ProductCard';
 import { Product } from '@/lib/types';
 import Link from 'next/link';
 
-async function getFeaturedProducts(): Promise<Product[]> {
+// Ana sayfada artık öne çıkan 4 ürün değil, TÜM aktif ürünler gösterilir.
+async function getAllProducts(): Promise<Product[]> {
   try {
     const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api'}/products`, {
       cache: 'no-store',
     });
     if (!res.ok) return [];
-    const data = await res.json();
-    return data.slice(0, 4);
+    return res.json();
   } catch {
     return [];
   }
 }
 
 export default async function HomePage() {
-  const products = await getFeaturedProducts();
+  const products = await getAllProducts();
 
   return (
     <main>
       <Navbar />
       <Hero />
+
+      {/* Banner Carousel - Admin panelinden yüklenen görseller. Banner yoksa bölüm hiç görünmez. */}
+      <BannerCarousel />
 
       {/* Hakkımızda */}
       <section id="hakkimizda" className="py-28 px-6 lg:px-10 bg-bh-black">
@@ -41,12 +45,12 @@ export default async function HomePage() {
         </div>
       </section>
 
-      {/* Öne Çıkan Ürünler */}
+      {/* Tüm Ürünler */}
       <section className="py-20 px-6 lg:px-10 bg-gradient-to-b from-bh-black to-[#151515]">
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-14">
             <p className="tracking-[0.4em] text-bh-gold text-xs uppercase mb-4">Koleksiyon</p>
-            <h2 className="font-serif text-4xl md:text-5xl text-white">Öne Çıkan Ürünler</h2>
+            <h2 className="font-serif text-4xl md:text-5xl text-white">Tüm Ürünlerimiz</h2>
           </div>
 
           {products.length > 0 ? (
@@ -57,11 +61,13 @@ export default async function HomePage() {
             <p className="text-center text-white/40">Henüz ürün eklenmedi. Admin panelinden ürün ekleyebilirsiniz.</p>
           )}
 
-          <div className="text-center mt-14">
-            <Link href="/urunler" className="border border-bh-gold text-bh-gold px-8 py-3.5 rounded-full hover:bg-bh-gold hover:text-bh-black transition-all">
-              Tüm Ürünleri Gör
-            </Link>
-          </div>
+          {products.length > 0 && (
+            <div className="text-center mt-14">
+              <Link href="/urunler" className="border border-bh-gold text-bh-gold px-8 py-3.5 rounded-full hover:bg-bh-gold hover:text-bh-black transition-all">
+                Filtrele ve Ara
+              </Link>
+            </div>
+          )}
         </div>
       </section>
 
