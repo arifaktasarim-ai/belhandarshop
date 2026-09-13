@@ -5,7 +5,7 @@
 //
 // AYAR: Aşağıdaki iki sabiti kendi bilgilerinize göre güncelleyin.
 // Telefon numarası başında ülke kodu ile, boşluksuz/tiresiz yazılmalıdır (örn. Türkiye için 90 ile başlar).
-const WHATSAPP_PHONE = '905555555555';
+const WHATSAPP_PHONE = '905314337171';
 const WHATSAPP_MESSAGE = 'Merhaba, Belhandar ürünleri hakkında sipariş vermek istiyorum.';
 
 export default function WhatsAppButton() {
