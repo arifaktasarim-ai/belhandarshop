@@ -11,6 +11,7 @@ import Navbar from '@/components/site/Navbar';
 import Footer from '@/components/site/Footer';
 import BannerCarousel from '@/components/site/BannerCarousel';
 import ProductCard from '@/components/site/ProductCard';
+import WhatsAppButton from '@/components/site/WhatsAppButton';
 import { Input } from '@/components/ui/input';
 import { Select } from '@/components/ui/select';
 import { Product, Category } from '@/lib/types';
@@ -122,6 +123,9 @@ export default function HomePage() {
       </section>
 
       <Footer />
+
+      {/* WhatsApp Sipariş Hattı - sağ altta sabit */}
+      <WhatsAppButton />
     </main>
   );
 }
